@@ -4,27 +4,36 @@ require 'fuzzer/util'
 module Fuzzer
   module Strategies
     class Mutational
-      def initialize(population)
-        @population = population.dup
+      MUTATION_RATE = 2
+
+      def initialize(population, population_size: 10, trials: 10)
+        @population = population
+        @population_size = population_size
+        @trials = trials
       end
 
       def fuzz(char_start: 32, char_range: 96, distance: 35)
-        @population = generate(population, char_start: char_start, char_range: char_range, distance: distance)
-        @population.each do |string|
-          yield string
+        new_population = population.dup
+
+        trials.times do
+          new_population = generate(new_population, char_start: char_start, char_range: char_range, distance: distance)
+
+          new_population.each do |string|
+            yield string
+          end
         end
       end
 
       private
 
-      attr_reader :population
+      attr_reader :population, :population_size, :trials
 
       def generate(original_population, char_start:, char_range:, distance:)
-        100.times.map do
+        population_size.times.map do
           string = original_population.sample
           new_string = string.dup
 
-          5.times.each do
+          MUTATION_RATE.times.each do
             new_string = mutate(new_string, char_start: char_start, char_range: char_range, distance: distance)
           end
 
@@ -74,7 +83,7 @@ module Fuzzer
         position = SecureRandom.random_number(string.length)
 
         string.dup.tap do |new_string|
-          new_char = [new_string[position].ord + difference * sign, 0].max
+          new_char = [255, [new_string[position].ord + difference * sign, 0].max].min
           new_string[position] = new_char.chr
         end
       end
