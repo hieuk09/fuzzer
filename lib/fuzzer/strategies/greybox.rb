@@ -4,7 +4,7 @@ require 'fuzzer/strategies/base'
 
 module Fuzzer
   module Strategies
-    class Mutational < Base
+    class Greybox < Base
       MUTATION_RATE = 2
 
       def initialize(population, population_size: 10, trials: 10)
@@ -14,11 +14,10 @@ module Fuzzer
       end
 
       def fuzz(char_start: 32, char_range: 96, distance: 35)
-        new_population = population.dup
         mutator = Mutator.new(char_start: char_start, char_range: char_range, distance: distance)
 
         trials.times do
-          new_population = generate(new_population, mutator)
+          new_population = generate(population.dup, mutator)
 
           new_population.each do |string|
             yield string

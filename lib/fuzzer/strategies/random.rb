@@ -1,9 +1,11 @@
 require 'securerandom'
+require 'fuzzer/strategies/base'
 
 module Fuzzer
   module Strategies
-    class Random
+    class Random < Base
       def initialize(count)
+        super([])
         @count = count
       end
 
@@ -21,7 +23,7 @@ module Fuzzer
 
       private
 
-      attr_reader :count
+      attr_reader :count, :population, :coverage
     end
   end
 end

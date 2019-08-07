@@ -17,22 +17,15 @@ module Fuzzer
     end
 
     def run
+      index = 0
+
       strategy.fuzz(fuzzer_options) do |string|
         yield string
+        strategy.add_to_population(string, index)
+        index += 1
       end
 
-      covered_line_count = 0
-      total_line_count = 0
-      result = Coverage.result
-
-      result.each do |file_name, coverage|
-        total_line_count += coverage.compact.count
-        covered_line_count += coverage.compact.count { |number| number.positive? }
-      end
-
-      coverage_result = (100.0 * covered_line_count / total_line_count).round(2)
-
-      puts "Coverage: #{coverage_result}%"
+      strategy.print_coverage_result
     end
 
     private

@@ -1,6 +1,7 @@
 require "fuzzer/version"
 require 'fuzzer/strategies/random'
 require 'fuzzer/strategies/mutational'
+require 'fuzzer/strategies/greybox'
 require 'fuzzer/runner'
 
 module Fuzzer
