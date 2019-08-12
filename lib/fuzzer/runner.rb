@@ -2,8 +2,6 @@ require 'coverage'
 
 module Fuzzer
   class Runner
-    DEFAULT_PATTERN = //
-
     def initialize(strategy, fuzzer_options = {}, runner_options = {})
       @strategy = strategy
       @fuzzer_options = fuzzer_options
@@ -31,9 +29,5 @@ module Fuzzer
     private
 
     attr_reader :strategy, :fuzzer_options, :runner_options
-
-    def coverage_pattern
-      runner_options[:coverage_pattern] || DEFAULT_PATTERN
-    end
   end
 end
