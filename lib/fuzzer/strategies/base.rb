@@ -49,6 +49,10 @@ module Fuzzer
         print coverage.each_with_index.map { |(_, step), index| [index, step] }
         print "\n"
       end
+
+      private
+
+      attr_reader :population, :coverage
     end
   end
 end

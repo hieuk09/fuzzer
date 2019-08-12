@@ -23,7 +23,7 @@ module Fuzzer
 
       private
 
-      attr_reader :count, :population, :coverage
+      attr_reader :count
     end
   end
 end
