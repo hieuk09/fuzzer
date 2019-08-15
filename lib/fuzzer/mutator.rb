@@ -2,10 +2,15 @@ require 'fuzzer/util'
 
 module Fuzzer
   class Mutator
-    def initialize(char_start:, char_range:, distance:)
+    def initialize(char_start: 32, char_range: 96, distance: 35, generator: Generators::Random.new)
       @char_start = char_start
       @char_range = char_range
       @distance = distance
+      @generator = generator
+    end
+
+    def generate
+      generator.generate
     end
 
     def mutate(string)
@@ -13,13 +18,14 @@ module Fuzzer
         delete_random_character(string),
         add_random_character(string, char_start: char_start, char_range: char_range),
         flipbit_random_character(string),
-        change_random_character(string, distance: distance)
+        change_random_character(string, distance: distance),
+        generator.generate
       ].sample
     end
 
     private
 
-    attr_reader :char_start, :char_range, :distance
+    attr_reader :char_start, :char_range, :distance, :generator
 
     def delete_random_character(string)
       length = string.length

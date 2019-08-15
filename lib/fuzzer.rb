@@ -4,6 +4,7 @@ require 'fuzzer/generators/grammar'
 require 'fuzzer/strategies/mutational'
 require 'fuzzer/strategies/greybox'
 require 'fuzzer/strategies/generational'
+require 'fuzzer/strategies/combination'
 require 'fuzzer/runner'
 
 module Fuzzer
