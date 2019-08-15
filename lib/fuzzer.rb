@@ -1,10 +1,10 @@
 require "fuzzer/version"
-require 'fuzzer/strategies/random'
+require 'fuzzer/generators/random'
+require 'fuzzer/generators/grammar'
 require 'fuzzer/strategies/mutational'
 require 'fuzzer/strategies/greybox'
-require 'fuzzer/strategies/grammar'
+require 'fuzzer/strategies/generational'
 require 'fuzzer/runner'
-require 'fuzzer/generator'
 
 module Fuzzer
   class Error < StandardError; end

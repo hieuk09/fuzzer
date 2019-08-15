@@ -2,7 +2,7 @@ require 'fuzzer/strategies/base'
 
 module Fuzzer
   module Strategies
-    class Grammar < Base
+    class Generational < Base
       def initialize(generator, trials: 10)
         super([])
         @generator = generator
