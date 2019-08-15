@@ -13,12 +13,12 @@ module Fuzzer
         @trials = trials
       end
 
-      def fuzz(char_start: 32, char_range: 96, distance: 35)
+      def fuzz(char_start: 32, char_range: 96, distance: 35, mutation_rate: MUTATION_RATE)
         new_population = population.dup
         mutator = Mutator.new(char_start: char_start, char_range: char_range, distance: distance)
 
         trials.times do
-          new_population = generate(new_population, mutator)
+          new_population = generate(new_population, mutator, mutation_rate)
 
           new_population.each do |string|
             yield string
@@ -30,12 +30,12 @@ module Fuzzer
 
       attr_reader :population_size, :trials
 
-      def generate(original_population, mutator)
+      def generate(original_population, mutator, mutation_rate)
         population_size.times.map do
           string = original_population.sample
           new_string = string.dup
 
-          MUTATION_RATE.times.each do
+          mutation_rate.times.each do
             new_string = mutator.mutate(new_string)
           end
 
