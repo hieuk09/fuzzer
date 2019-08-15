@@ -23,11 +23,19 @@ module Fuzzer
         index += 1
       end
 
-      strategy.print_coverage_result
+      print_coverage_result
     end
 
     private
 
     attr_reader :strategy, :fuzzer_options, :runner_options
+
+    def print_coverage_result
+      covered_line_count = 0
+      total_line_count = 0
+
+      coverage = strategy.coverage
+      puts "Found #{coverage.keys.size} unique paths"
+    end
   end
 end
