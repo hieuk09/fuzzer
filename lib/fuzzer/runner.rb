@@ -1,4 +1,5 @@
 require 'coverage'
+require 'benchmark'
 
 module Fuzzer
   class Runner
@@ -17,11 +18,15 @@ module Fuzzer
     def run
       index = 0
 
-      strategy.fuzz(fuzzer_options) do |string|
-        yield string
-        strategy.add_to_population(string, index)
-        index += 1
+      time = Benchmark.measure do
+        strategy.fuzz(fuzzer_options) do |string|
+          yield string
+          strategy.add_to_population(string, index)
+          index += 1
+        end
       end
+
+      puts "Running #{index} inputs took #{time.total} seconds"
 
       print_coverage_result
     end
@@ -31,9 +36,6 @@ module Fuzzer
     attr_reader :strategy, :fuzzer_options, :runner_options
 
     def print_coverage_result
-      covered_line_count = 0
-      total_line_count = 0
-
       coverage = strategy.coverage
       puts "Found #{coverage.keys.size} unique paths"
     end
