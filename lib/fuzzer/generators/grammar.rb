@@ -9,7 +9,7 @@ module Fuzzer
       end
 
       def generate
-        render(grammar[START_ELEMENT].sample)
+        render(grammar.fetch(START_ELEMENT).sample)
       end
 
       private
@@ -21,7 +21,7 @@ module Fuzzer
 
         elements = string.scan(NON_TERMINAL_REGEX).flatten.uniq
         elements.each do |element|
-          string.gsub!(element, render(grammar[element].sample))
+          string.gsub!(element, render(grammar.fetch(element).sample))
         end
 
         string
