@@ -2,7 +2,7 @@ require 'fuzzer/util'
 
 module Fuzzer
   class Mutator
-    def initialize(char_start: 32, char_range: 96, distance: 35, generator: Generators::Random.new)
+    def initialize(char_start: 32, char_range: 96, distance: 35, generator: nil)
       @char_start = char_start
       @char_range = char_range
       @distance = distance
@@ -19,8 +19,8 @@ module Fuzzer
         add_random_character(string, char_start: char_start, char_range: char_range),
         flipbit_random_character(string),
         change_random_character(string, distance: distance),
-        generator.generate
-      ].sample
+        generate
+      ].compact.sample
     end
 
     private
@@ -42,9 +42,14 @@ module Fuzzer
 
     def flipbit_random_character(string)
       length = string.length
-      flip_position = SecureRandom.random_number(length)
-      string.dup.tap do |new_string|
-        new_string[flip_position] = flipbit(new_string[flip_position])
+
+      if length.positive?
+        flip_position = SecureRandom.random_number(length)
+        string.dup.tap do |new_string|
+          new_string[flip_position] = flipbit(new_string[flip_position])
+        end
+      else
+        string
       end
     end
 
@@ -55,14 +60,22 @@ module Fuzzer
     end
 
     def change_random_character(string, distance:)
-      difference = SecureRandom.random_number(distance)
-      sign = SecureRandom.random_number(2) == 0 ? 1 : -1
-      position = SecureRandom.random_number(string.length)
+      if string.empty?
+        string
+      else
+        difference = SecureRandom.random_number(distance)
+        sign = SecureRandom.random_number(2) == 0 ? 1 : -1
+        position = SecureRandom.random_number(string.length)
 
-      string.dup.tap do |new_string|
-        new_char = [255, [new_string[position].ord + difference * sign, 0].max].min
-        new_string[position] = new_char.chr
+        string.dup.tap do |new_string|
+          new_char = [255, [new_string[position].ord + difference * sign, 0].max].min
+          new_string[position] = new_char.chr
+        end
       end
+    end
+
+    def generate
+      generator&.generate
     end
   end
 end
