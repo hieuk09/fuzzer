@@ -10,7 +10,7 @@ module Fuzzer
     end
 
     def generate
-      generator.generate
+      generator&.generate
     end
 
     def mutate(string)
@@ -72,10 +72,6 @@ module Fuzzer
           new_string[position] = new_char.chr
         end
       end
-    end
-
-    def generate
-      generator&.generate
     end
   end
 end
