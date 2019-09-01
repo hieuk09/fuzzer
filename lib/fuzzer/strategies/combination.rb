@@ -27,7 +27,7 @@ module Fuzzer
 
       private
 
-      attr_reader :mutator, :trials, :population_size
+      attr_reader :mutator, :generator, :trials, :population_size
 
       def generate(original_population, mutation_rate)
         population_size.times.map do
