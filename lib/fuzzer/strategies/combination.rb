@@ -1,15 +1,22 @@
 module Fuzzer
   module Strategies
     class Combination < Base
-      def initialize(mutator, trials: 10, population_size: 10)
+      def initialize(generator, mutator, trials: 10, population_size: 10)
         super([])
         @trials = trials
+        @generator = generator
         @mutator = mutator
         @population_size = population_size
       end
 
       def fuzz(mutation_rate: 2)
-        trials.times do
+        seed_run = (trials * 0.1).to_i
+
+        seed_run.times do
+          yield generator.generate
+        end
+
+        (trials - seed_run).times do
           new_population = generate(population.dup, mutation_rate)
 
           new_population.each do |string|
