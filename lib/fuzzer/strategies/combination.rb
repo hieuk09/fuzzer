@@ -12,15 +12,17 @@ module Fuzzer
       def fuzz(mutation_rate: 2)
         seed_run = (trials * 0.1).to_i
 
-        seed_run.times do
-          yield generator.generate
-        end
+        trials.times do |index|
+          if index < seed_run
+            population_size.times do
+              yield generator.generate
+            end
+          else
+            new_population = generate(population.dup, mutation_rate)
 
-        (trials - seed_run).times do
-          new_population = generate(population.dup, mutation_rate)
-
-          new_population.each do |string|
-            yield string
+            new_population.each do |string|
+              yield string
+            end
           end
         end
       end
